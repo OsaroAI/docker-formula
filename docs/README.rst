@@ -103,7 +103,7 @@ In the example pillar above:
 ``docker.clean``
 ^^^^^^^^^^^^^^^^
 
-Stop Docker daemon and remove older docker packages (usually called 'docker' and 'docker-engine'). Linux only.
+Stop Docker daemon and remove docker packages ('docker', 'docker-engine', 'docker-ce', etc) on Linux. To protect OS integrity, this state won't remove packages listed as dependencies (i.e. python is kept).
 
 ``docker.repo``
 ^^^^^^^^^^^^^^^
@@ -115,10 +115,10 @@ Configures the upstream docker's repo (true, by default).
 
 Installs Docker Desktop for Mac.
 
-``docker.macosapp``
-^^^^^^^^^^^^^^^^^^^
+``docker.macosapp.clean``
+^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Installs Docker Desktop for Mac.
+Removes Docker Desktop from Mac.
 
 ``docker.compose``
 ^^^^^^^^^^^^^^^^^^
@@ -178,6 +178,10 @@ To use this formula, you might target a host with the following pillar:
           restart: 'always'
           links:
             - 'registry-999-99-service:registry'
+          working_dir: '/var/www/html'
+          volume_driver: 'foobar'
+          userns_mode: 'host'
+          user: 'nginx'
           ports:
             - '80:80'
             - '443:443'

@@ -1,5 +1,32 @@
 # Changelog
 
+# [0.44.0](https://github.com/saltstack-formulas/docker-formula/compare/v0.43.1...v0.44.0) (2020-05-15)
+
+
+### Continuous Integration
+
+* **gemfile.lock:** add to repo with updated `Gemfile` [skip ci] ([c3dd00a](https://github.com/saltstack-formulas/docker-formula/commit/c3dd00a2472eb092761419a88eeb0fa29117d97a))
+* **kitchen+travis:** remove `master-py2-arch-base-latest` [skip ci] ([df90212](https://github.com/saltstack-formulas/docker-formula/commit/df9021232563c8fe4583c2faee48f8f1d17c3562))
+* **workflows/commitlint:** add to repo [skip ci] ([87a62cd](https://github.com/saltstack-formulas/docker-formula/commit/87a62cd8fb42b5561ad2ec12cfdba7b342f81359))
+
+
+### Features
+
+* **compose-ng:** support working_dir, volume_driver, userns_mode & user ([30ec6ab](https://github.com/saltstack-formulas/docker-formula/commit/30ec6ab02bd0265e90b12bcc367b7334bf536a4a))
+
+## [0.43.1](https://github.com/saltstack-formulas/docker-formula/compare/v0.43.0...v0.43.1) (2020-04-08)
+
+
+### Bug Fixes
+
+* **compose-ng:** fix ports, volumes, restart policy, add privileged mode ([f62a45c](https://github.com/saltstack-formulas/docker-formula/commit/f62a45cd0e1aea91eed27dac1724090ef18aceea))
+* avoid setting multiple pre-start stanzas in upstart ([80a2a98](https://github.com/saltstack-formulas/docker-formula/commit/80a2a985e96b2d7c9867660f15a5e7a9808ee156))
+
+
+### Continuous Integration
+
+* **kitchen:** avoid using bootstrap for `master` instances [skip ci] ([27b509e](https://github.com/saltstack-formulas/docker-formula/commit/27b509e696e06b9ea244170608f348f841ebb36c))
+
 # [0.43.0](https://github.com/saltstack-formulas/docker-formula/compare/v0.42.0...v0.43.0) (2020-01-22)
 
 
