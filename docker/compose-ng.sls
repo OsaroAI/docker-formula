@@ -30,6 +30,7 @@ include:
   docker_container.running:
     - skip_translate: {{ docker.containers.skip_translate }}
     - force: {{ docker.containers.force_running }}
+    - privileged: {{ container.privileged|default(False) }}
      {%- else %}
        {%- if 'dvc' in container and container.dvc %}
   docker.installed:
@@ -42,6 +43,18 @@ include:
   {%- if 'command' in container %}
     - command: {{ container.command }}
   {%- endif %}
+  {%- if 'working_dir' in container %}
+    - working_dir: {{ container.working_dir }}
+  {%- endif %}
+  {%- if 'volume_driver' in container %}
+    - volume_driver: {{ container.volume_driver }}
+  {%- endif %}
+  {%- if 'userns_mode' in container %}
+    - userns_mode: {{ container.userns_mode }}
+  {%- endif %}
+  {%- if 'user' in container %}
+    - user: {{ container.user }}
+  {%- endif %}
   {%- if 'environment' in container and container.environment is iterable %}
     - environment:
     {%- for variable, value in container.environment.items() %}
@@ -49,16 +62,16 @@ include:
     {%- endfor %}
   {%- endif %}
   {%- if 'ports' in container and container.ports is iterable %}
-    - ports:
+    - port_bindings:
     {%- for port_mapping in container.ports %}
       {%- if port_mapping is string %}
         {%- set mapping = port_mapping.split(':',2) %}
         {%- if mapping|length < 2 %}
       - "{{ mapping[0] }}"
+        {%- elif mapping|length > 2 %}
+      - "{{ mapping[0] }}:{{ mapping[1] }}:{{ mapping[-1] }}"
         {%- else %}
-      - "{{ mapping[-1] }}/tcp":
-            HostPort: "{{ mapping[-2] }}"
-            HostIp: "{{ mapping[-3]|d('') }}"
+      - "{{ mapping[0] }}:{{ mapping[-1] }}"
         {%- endif %}
       {%- elif port_mapping is mapping %}
       - {{ port_mapping }}
@@ -66,9 +79,14 @@ include:
     {%- endfor %}
   {%- endif %}
   {%- if 'volumes' in container %}
-    - volumes:
-    {%- for volume in container.volumes %}
-      - {{ volume }}
+    - binds:
+    {%- for bind in container.volumes %}
+      {%- set mapping = bind.rsplit(':', 1) %}
+      {%- if mapping|length > 1 %}
+        - "{{ mapping[0] }}:{{ mapping[-1] }}"
+      {%- else %}
+        - "{{ mapping[0] }}"
+      {%- endif %}
     {%- endfor %}
   {%- endif %}
   {%- if 'volumes_from' in container %}
@@ -87,11 +105,11 @@ include:
     {%- endfor %}
   {%- endif %}
   {%- if 'restart' in container %}
-    - restart_policy:
     {%- set policy = container.restart.split(':',1) %}
-        Name: {{ policy[0] }}
-    {%- if policy|length > 1 %}
-        MaximumRetryCount: {{ policy[1] }}
+    {%- if policy|length < 2 %}
+    - restart_policy: {{ policy[0] }}
+    {%- else %}
+    - restart_policy: {{ policy[0] }}:{{ policy[-1] }}
     {%- endif %}
   {%- endif %}
     - require:
